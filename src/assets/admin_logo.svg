@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="320" height="96" viewBox="0 0 320 96" fill="none">
-  <rect width="320" height="96" rx="18" fill="#0F766E"/>
-  <circle cx="48" cy="48" r="28" fill="#CCFBF1"/>
-  <path d="M48 34V62M34 48H62" stroke="#0F766E" stroke-width="8" stroke-linecap="round"/>
+  <rect width="320" height="96" rx="18" fill="#0b1f4d"/>
+  <circle cx="48" cy="48" r="28" fill="#DBEAFE"/>
+  <path d="M48 34V62M34 48H62" stroke="#0b1f4d" stroke-width="8" stroke-linecap="round"/>
   <text x="92" y="44" fill="#F0FDFA" font-family="Outfit, Arial, sans-serif" font-size="25" font-weight="700">Kiaan</text>
-  <text x="92" y="68" fill="#99F6E4" font-family="Outfit, Arial, sans-serif" font-size="18" font-weight="500">Clinic Care</text>
+  <text x="92" y="68" fill="#BFDBFE" font-family="Outfit, Arial, sans-serif" font-size="18" font-weight="500">Clinic Care</text>
 </svg>

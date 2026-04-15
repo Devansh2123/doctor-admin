@@ -9,6 +9,9 @@ const DoctorProfile = () => {
     const { dToken, profileData, setProfileData, getProfileData } = useContext(DoctorContext)
     const { currency, backendUrl } = useContext(AppContext)
     const [isEdit, setIsEdit] = useState(false)
+    const [slotTimesText, setSlotTimesText] = useState('')
+
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const renderStars = (rating) => {
         const filled = Math.round(Number(rating) || 0)
         return (
@@ -31,7 +34,9 @@ const DoctorProfile = () => {
                 fees: profileData.fees,
                 about: profileData.about,
                 available: profileData.available,
-                appointmentApprovalMode: profileData.appointmentApprovalMode || 'auto'
+                appointmentApprovalMode: profileData.appointmentApprovalMode || 'auto',
+                availableSlotTimes: slotTimesText,
+                workingDays: Array.isArray(profileData.workingDays) ? profileData.workingDays : []
             }
 
             const { data } = await axios.post(backendUrl + '/api/doctor/update-profile', updateData, { headers: { dToken } })
@@ -58,6 +63,17 @@ const DoctorProfile = () => {
             getProfileData()
         }
     }, [dToken])
+
+    useEffect(() => {
+        if (!profileData) return
+        if (!isEdit) return
+
+        const current = Array.isArray(profileData.availableSlotTimes) ? profileData.availableSlotTimes : []
+        setSlotTimesText(current.join(', '))
+        if (!Array.isArray(profileData.workingDays)) {
+            setProfileData((prev) => ({ ...prev, workingDays: [] }))
+        }
+    }, [isEdit, profileData])
 
     return profileData && (
         <div className='panel-page'>
@@ -126,6 +142,61 @@ const DoctorProfile = () => {
                             <p className='text-sm text-slate-600'>
                                 {(profileData.appointmentApprovalMode || 'auto') === 'manual' ? 'Manual accept/reject' : 'Auto confirm'}
                             </p>
+                        )}
+                    </div>
+
+                    <div className='mt-4'>
+                        <p className='text-sm text-slate-700 mb-1'>Booking Schedule</p>
+                        <p className='text-xs text-slate-500'>Optional: set fixed daily slot times (example: `10:00 AM, 06:00 PM`). If empty, patients see all 30-min slots.</p>
+                        {isEdit ? (
+                            <>
+                                <input
+                                    className='panel-input mt-2 w-full'
+                                    value={slotTimesText}
+                                    onChange={(e) => setSlotTimesText(e.target.value)}
+                                    placeholder='10:00 AM, 06:00 PM'
+                                />
+                                <div className='mt-3'>
+                                    <p className='text-xs font-semibold text-slate-600'>Working Days</p>
+                                    <div className='mt-2 flex flex-wrap gap-2'>
+                                        {daysOfWeek.map((label, idx) => {
+                                            const active = Array.isArray(profileData.workingDays) && profileData.workingDays.includes(idx)
+                                            return (
+                                                <button
+                                                    type='button'
+                                                    key={label}
+                                                    onClick={() => {
+                                                        setProfileData((prev) => {
+                                                            const current = Array.isArray(prev.workingDays) ? prev.workingDays : []
+                                                            const next = active ? current.filter((d) => d !== idx) : [...current, idx]
+                                                            return { ...prev, workingDays: next.sort((a, b) => a - b) }
+                                                        })
+                                                    }}
+                                                    className={`panel-tab-btn ${active ? 'panel-tab-btn-active' : ''}`}
+                                                >
+                                                    {label}
+                                                </button>
+                                            )
+                                        })}
+                                    </div>
+                                    <p className='mt-2 text-xs text-slate-500'>If none selected, all days are allowed.</p>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <p className='text-sm text-slate-600 mt-2'>
+                                    {Array.isArray(profileData.availableSlotTimes) && profileData.availableSlotTimes.length
+                                        ? profileData.availableSlotTimes.join(', ')
+                                        : 'Default (every 30 minutes)'
+                                    }
+                                </p>
+                                <p className='text-xs text-slate-500 mt-1'>
+                                    {Array.isArray(profileData.workingDays) && profileData.workingDays.length
+                                        ? `Working: ${profileData.workingDays.map((d) => daysOfWeek[d]).join(', ')}`
+                                        : 'Working: All days'
+                                    }
+                                </p>
+                            </>
                         )}
                     </div>
 

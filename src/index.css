@@ -45,15 +45,15 @@
     }
 
     .theme-doctor {
-        --panel-accent: #0f766e;
-        --panel-accent-hover: #115e59;
-        --panel-accent-soft: #f0fdfa;
-        --panel-accent-border: #99f6e4;
-        --panel-accent-text: #0f766e;
-        --panel-bg-start: #f0fdfa;
-        --panel-bg-mid: #f8fafc;
-        --panel-bg-end: #ecfeff;
-        --panel-header-start: #ecfeff;
+        --panel-accent: #0b1f4d;
+        --panel-accent-hover: #12337a;
+        --panel-accent-soft: #eef2ff;
+        --panel-accent-border: #a5b4fc;
+        --panel-accent-text: #0b1f4d;
+        --panel-bg-start: #eef2ff;
+        --panel-bg-mid: #ffffff;
+        --panel-bg-end: #eff6ff;
+        --panel-header-start: #eff6ff;
         --panel-header-end: #ffffff;
     }
 
@@ -87,7 +87,7 @@
     }
 
     .panel-input {
-        @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-emerald-400;
+        @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-indigo-400;
     }
 
     .panel-btn {

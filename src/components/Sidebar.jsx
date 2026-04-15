@@ -39,6 +39,10 @@ const Sidebar = () => {
           <img className='min-w-5' src={assets.appointment_icon} alt='' />
           <p className='hidden md:block'>Claims</p>
         </NavLink>
+        <NavLink to={'/site-settings'} className={({ isActive }) => `mx-2 mb-1 flex items-center gap-3 rounded-xl py-3.5 px-3 md:px-6 md:min-w-72 cursor-pointer transition ${isActive ? 'panel-active-item' : 'hover:bg-slate-50'}`}>
+          <img className='min-w-5' src={assets.list_icon} alt='' />
+          <p className='hidden md:block'>Site Settings</p>
+        </NavLink>
       </ul>
       </>}
 

@@ -292,7 +292,7 @@ const Dashboard = () => {
                 <XAxis dataKey='speciality' tickLine={false} axisLine={false} fontSize={11} interval={0} angle={-15} textAnchor='end' height={50} />
                 <YAxis tickLine={false} axisLine={false} fontSize={12} />
                 <Tooltip cursor={{ fill: 'rgba(15, 23, 42, 0.06)' }} formatter={(value) => formatCurrency(value)} />
-                <Bar dataKey='revenue' radius={[10, 10, 0, 0]} fill='#0f766e' />
+              <Bar dataKey='revenue' radius={[10, 10, 0, 0]} fill='#0b1f4d' />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -336,7 +336,7 @@ const Dashboard = () => {
                 <XAxis dataKey='name' tickLine={false} axisLine={false} fontSize={11} interval={0} angle={-15} textAnchor='end' height={50} />
                 <YAxis tickLine={false} axisLine={false} fontSize={12} allowDecimals={false} />
                 <Tooltip cursor={{ fill: 'rgba(15, 23, 42, 0.06)' }} />
-                <Bar dataKey='count' radius={[10, 10, 0, 0]} fill='#0f766e' />
+              <Bar dataKey='count' radius={[10, 10, 0, 0]} fill='#0b1f4d' />
               </BarChart>
             </ResponsiveContainer>
           </div>
