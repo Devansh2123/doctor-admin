@@ -46,25 +46,75 @@ const Login = () => {
 
   return (
     <form onSubmit={onSubmitHandler} className='min-h-[80vh] flex items-center px-4'>
-      <div className='panel-shell flex flex-col gap-4 m-auto items-start p-8 min-w-[340px] sm:min-w-96 text-slate-600 text-sm shadow-lg'>
+      <div className='panel-shell flex flex-col gap-5 m-auto items-start p-8 min-w-[340px] sm:min-w-96 text-slate-600 text-sm shadow-lg rounded-xl'>
+        {/* Role Selection Tabs */}
+        <div className='w-full flex gap-2 p-1 bg-slate-100 rounded-lg'>
+          <button
+            type='button'
+            onClick={() => setState('Admin')}
+            className={`flex-1 py-2.5 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
+              state === 'Admin'
+                ? 'bg-white text-slate-800 shadow-sm'
+                : 'text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            Admin
+          </button>
+          <button
+            type='button'
+            onClick={() => setState('Doctor')}
+            className={`flex-1 py-2.5 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
+              state === 'Doctor'
+                ? 'bg-white text-slate-800 shadow-sm'
+                : 'text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            Doctor
+          </button>
+        </div>
+
+        {/* Title */}
         <div className='text-center w-full'>
-          <p className='text-2xl font-semibold text-slate-800'><span className='panel-text-accent'>{state}</span> Login</p>
-          <p className='text-xs text-slate-500 mt-1'>Welcome back. Please enter your credentials.</p>
+          <p className='text-2xl font-semibold text-slate-800'>
+            {state === 'Admin' ? 'Admin Login' : 'Doctor Login'}
+          </p>
+          <p className='text-xs text-slate-500 mt-1'>
+            {state === 'Admin'
+              ? 'Access the admin dashboard and manage the clinic'
+              : 'View appointments and manage your profile'}
+          </p>
         </div>
-        <div className='w-full '>
-          <p>Email</p>
-          <input onChange={(e) => setEmail(e.target.value)} value={email} className='panel-input mt-1' type="email" required />
+
+        {/* Form Fields */}
+        <div className='w-full space-y-4'>
+          <div>
+            <label className='text-sm font-medium text-slate-700'>Email</label>
+            <input
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+              className='panel-input mt-1.5 w-full'
+              type="email"
+              placeholder='Enter your email'
+              required
+            />
+          </div>
+          <div>
+            <label className='text-sm font-medium text-slate-700'>Password</label>
+            <input
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              className='panel-input mt-1.5 w-full'
+              type="password"
+              placeholder='Enter your password'
+              required
+            />
+          </div>
         </div>
-        <div className='w-full '>
-          <p>Password</p>
-          <input onChange={(e) => setPassword(e.target.value)} value={password} className='panel-input mt-1' type="password" required />
-        </div>
-        <button className='panel-btn w-full py-2 rounded-lg text-base'>Login</button>
-        {
-          state === 'Admin'
-            ? <p>Doctor Login? <span onClick={() => setState('Doctor')} className='panel-link'>Click here</span></p>
-            : <p>Admin Login? <span onClick={() => setState('Admin')} className='panel-link'>Click here</span></p>
-        }
+
+        {/* Login Button */}
+        <button className='panel-btn w-full py-2.5 rounded-lg text-base font-medium'>
+          Login as {state}
+        </button>
       </div>
     </form>
   )

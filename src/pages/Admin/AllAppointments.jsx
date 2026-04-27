@@ -5,7 +5,7 @@ import { AppContext } from '../../context/AppContext'
 
 const AllAppointments = () => {
 
-  const { aToken, appointments, cancelAppointment, getAllAppointments, uploadPrescription, downloadReport, uploadingPrescriptionFor } = useContext(AdminContext)
+  const { aToken, appointments, cancelAppointment, getAllAppointments, uploadPrescription, viewPrescription, downloadReport, uploadingPrescriptionFor } = useContext(AdminContext)
   const { slotDateFormat, calculateAge, currency } = useContext(AppContext)
   const [prescriptionFiles, setPrescriptionFiles] = useState({})
   const [currentPage, setCurrentPage] = useState(1)
@@ -142,9 +142,9 @@ const AllAppointments = () => {
                 </button>
 
                 {item.prescriptionUrl && (
-                  <a href={item.prescriptionUrl} target='_blank' rel='noreferrer' className='panel-outline-btn'>
+                  <button onClick={() => viewPrescription(item._id, item.prescriptionUrl)} className='panel-outline-btn'>
                     View Prescription
-                  </a>
+                  </button>
                 )}
 
                 <button

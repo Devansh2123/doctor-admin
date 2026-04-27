@@ -205,6 +205,23 @@ const AdminContextProvider = (props) => {
         }
     }
 
+    // Function to view prescription for admin appointment in browser
+    const viewPrescription = (appointmentId, prescriptionUrl = '') => {
+        try {
+            const safeToken = encodeURIComponent(aToken || '')
+            const url = `${backendUrl}/api/admin/view-prescription/${appointmentId}?token=${safeToken}`
+            window.open(url, '_blank', 'noopener,noreferrer')
+        } catch (error) {
+            if (prescriptionUrl) {
+                window.open(prescriptionUrl, '_blank', 'noopener,noreferrer')
+                toast.warning('Secure preview failed, opened direct file link instead.')
+                return
+            }
+            toast.error('Unable to open prescription file')
+            console.log(error)
+        }
+    }
+
     // Getting Admin Dashboard data from Database using API
     const getDashData = async () => {
         try {
@@ -240,6 +257,7 @@ const AdminContextProvider = (props) => {
         cancelAppointment,
         dashData,
         uploadPrescription,
+        viewPrescription,
         downloadReport,
         uploadingPrescriptionFor
     }

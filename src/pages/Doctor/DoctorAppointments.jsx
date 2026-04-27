@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 const DoctorAppointments = () => {
 
-  const { dToken, appointments, getAppointments, cancelAppointment, completeAppointment, approveAppointment, rejectAppointment, uploadPrescription, downloadReport, uploadingPrescriptionFor } = useContext(DoctorContext)
+  const { dToken, appointments, getAppointments, cancelAppointment, completeAppointment, approveAppointment, rejectAppointment, uploadPrescription, viewPrescription, downloadReport, uploadingPrescriptionFor } = useContext(DoctorContext)
   const { slotDateFormat, calculateAge, currency } = useContext(AppContext)
   const navigate = useNavigate()
   const [prescriptionFiles, setPrescriptionFiles] = useState({})
@@ -17,14 +17,10 @@ const DoctorAppointments = () => {
   const isPendingApproval = (appointment) => getApprovalStatus(appointment) === 'pending'
   const isRejected = (appointment) => getApprovalStatus(appointment) === 'rejected'
 
-  const getAppointmentDateTime = (appointment) => {
-    const [day, month, year] = appointment.slotDate.split('_').map(Number)
-    return new Date(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} ${appointment.slotTime}`)
-  }
-
   const isPastAppointment = (appointment) => {
-    if (appointment.cancelled || appointment.isCompleted) return true
-    return getAppointmentDateTime(appointment) < new Date()
+    // Only show in 'past' tab if explicitly cancelled or completed by doctor
+    // NOT just because the date has passed
+    return appointment.cancelled || appointment.isCompleted
   }
 
   const filteredAppointments = useMemo(() => {
@@ -123,10 +119,15 @@ const DoctorAppointments = () => {
                 ? <p className='panel-status-cancel'>Cancelled</p>
                 : item.isCompleted
                   ? <p className='panel-status-complete'>Completed</p>
-                  : <div className='flex'>
-                    <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />
-                    <img onClick={() => completeAppointment(item._id)} className='w-10 cursor-pointer' src={assets.tick_icon} alt="" />
-                  </div>
+                  : (
+                    <div className='flex flex-col gap-2'>
+                      <p className='text-xs text-green-600 font-medium'>Confirmed - Awaiting completion</p>
+                      <div className='flex'>
+                        <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />
+                        <img onClick={() => completeAppointment(item._id)} className='w-10 cursor-pointer' src={assets.tick_icon} alt="" />
+                      </div>
+                    </div>
+                  )
               }
 
               <input
@@ -154,9 +155,9 @@ const DoctorAppointments = () => {
                 </button>
 
                 {item.prescriptionUrl && (
-                  <a href={item.prescriptionUrl} target='_blank' rel='noreferrer' className='panel-outline-btn'>
+                  <button onClick={() => viewPrescription(item._id, item.prescriptionUrl)} className='panel-outline-btn'>
                     View Prescription
-                  </a>
+                  </button>
                 )}
 
                 <button
@@ -166,6 +167,7 @@ const DoctorAppointments = () => {
                   Download Report
                 </button>
               </div>
+
             </div>
           </div>
         ))}

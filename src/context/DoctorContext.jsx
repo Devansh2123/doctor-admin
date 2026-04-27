@@ -15,6 +15,8 @@ const DoctorContextProvider = (props) => {
     const [dashData, setDashData] = useState(false)
     const [profileData, setProfileData] = useState(false)
     const [uploadingPrescriptionFor, setUploadingPrescriptionFor] = useState('')
+    const [savingMedicalHistoryFor, setSavingMedicalHistoryFor] = useState('')
+    const [patientMedicalHistoryMap, setPatientMedicalHistoryMap] = useState({})
 
     // Getting Doctor appointment data from Database using API
     const getAppointments = async () => {
@@ -186,6 +188,68 @@ const DoctorContextProvider = (props) => {
         }
     }
 
+    // Function to view prescription for doctor appointment in browser
+    const viewPrescription = (appointmentId, prescriptionUrl = '') => {
+        try {
+            const safeToken = encodeURIComponent(dToken || '')
+            const url = `${backendUrl}/api/doctor/view-prescription/${appointmentId}?token=${safeToken}`
+            window.open(url, '_blank', 'noopener,noreferrer')
+        } catch (error) {
+            if (prescriptionUrl) {
+                window.open(prescriptionUrl, '_blank', 'noopener,noreferrer')
+                toast.warning('Secure preview failed, opened direct file link instead.')
+                return
+            }
+            toast.error('Unable to open prescription file')
+            console.log(error)
+        }
+    }
+
+    // Function to save medical history against appointment
+    const saveMedicalHistory = async (appointmentId, medicalData) => {
+        try {
+            setSavingMedicalHistoryFor(appointmentId)
+            const { data } = await axios.post(
+                backendUrl + '/api/doctor/medical-history',
+                { appointmentId, ...medicalData },
+                { headers: { dToken } }
+            )
+
+            if (data.success) {
+                toast.success(data.message)
+                await getAppointments()
+            } else {
+                toast.error(data.message)
+            }
+            return data
+        } catch (error) {
+            toast.error(error.message)
+            console.log(error)
+            return { success: false, message: error.message }
+        } finally {
+            setSavingMedicalHistoryFor('')
+        }
+    }
+
+    // Function to fetch patient's past medical history entries
+    const getPatientMedicalHistory = async (userId) => {
+        try {
+            const { data } = await axios.get(backendUrl + `/api/doctor/medical-history/${userId}`, { headers: { dToken } })
+
+            if (data.success) {
+                setPatientMedicalHistoryMap((prev) => ({ ...prev, [userId]: data.history || [] }))
+                return data.history || []
+            }
+
+            toast.error(data.message)
+            return []
+        } catch (error) {
+            toast.error(error.message)
+            console.log(error)
+            return []
+        }
+    }
+
     // Getting Doctor dashboard data using API
     const getDashData = async () => {
         try {
@@ -214,8 +278,13 @@ const DoctorContextProvider = (props) => {
         approveAppointment,
         rejectAppointment,
         uploadPrescription,
+        viewPrescription,
         downloadReport,
         uploadingPrescriptionFor,
+        saveMedicalHistory,
+        savingMedicalHistoryFor,
+        getPatientMedicalHistory,
+        patientMedicalHistoryMap,
         dashData, getDashData,
         profileData, setProfileData,
         getProfileData,

@@ -511,6 +511,78 @@
     .panel-sidebar-title {
         @apply text-xs uppercase tracking-widest text-slate-400 px-6 mt-6 mb-3;
     }
+
+    .prescription-paper {
+        @apply rounded-2xl border bg-white p-4 text-sm text-slate-800;
+        border-color: #cbd5e1;
+    }
+
+    .prescription-head {
+        @apply grid grid-cols-3 gap-2 items-start border-b pb-2;
+        border-color: #cbd5e1;
+    }
+
+    .prescription-doc-name {
+        @apply text-sm font-semibold;
+    }
+
+    .prescription-hospital {
+        @apply text-3xl font-semibold tracking-wide;
+    }
+
+    .prescription-small {
+        @apply text-[11px] text-slate-500;
+    }
+
+    .prescription-row {
+        @apply flex flex-wrap items-center justify-between gap-2 py-2 border-b text-xs;
+        border-color: #cbd5e1;
+    }
+
+    .prescription-body {
+        @apply py-2 space-y-1 text-xs;
+    }
+
+    .prescription-table {
+        @apply w-full border text-xs mt-2;
+        border-color: #cbd5e1;
+        border-collapse: collapse;
+    }
+
+    .prescription-table th,
+    .prescription-table td {
+        border: 1px solid #cbd5e1;
+        padding: 6px;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .prescription-foot {
+        @apply border-t mt-2 pt-2 text-xs space-y-1;
+        border-color: #cbd5e1;
+    }
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .prescription-paper,
+    .prescription-paper * {
+        visibility: visible;
+    }
+
+    .prescription-paper {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: 0;
+        box-shadow: none;
+        margin: 0;
+        padding: 12mm;
+    }
 }
 
 .theme-dark {
