@@ -1,4 +1,5 @@
-import { createContext, useState } from "react";
+/* eslint-disable react/prop-types */
+import { createContext, useRef, useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import safeStorage from "../utils/safeStorage";
@@ -6,7 +7,7 @@ import safeStorage from "../utils/safeStorage";
 
 export const DoctorContext = createContext()
 
-const DoctorContextProvider = (props) => {
+const DoctorContextProvider = ({ children }) => {
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL
 
@@ -17,23 +18,37 @@ const DoctorContextProvider = (props) => {
     const [uploadingPrescriptionFor, setUploadingPrescriptionFor] = useState('')
     const [savingMedicalHistoryFor, setSavingMedicalHistoryFor] = useState('')
     const [patientMedicalHistoryMap, setPatientMedicalHistoryMap] = useState({})
+    const appointmentsRequestRef = useRef(null)
+    const dashboardRequestRef = useRef(null)
+    const appointmentsLoadedRef = useRef(false)
+    const dashboardLoadedRef = useRef(false)
 
     // Getting Doctor appointment data from Database using API
-    const getAppointments = async () => {
-        try {
+    const getAppointments = async (force = false) => {
+        if (!force && appointmentsLoadedRef.current) return
+        if (!force && appointmentsRequestRef.current) return appointmentsRequestRef.current
 
-            const { data } = await axios.get(backendUrl + '/api/doctor/appointments', { headers: { dToken } })
+        appointmentsRequestRef.current = (async () => {
+            try {
 
-            if (data.success) {
-                setAppointments(data.appointments.reverse())
-            } else {
-                toast.error(data.message)
+                const { data } = await axios.get(backendUrl + '/api/doctor/appointments', { headers: { dToken } })
+
+                if (data.success) {
+                    setAppointments(data.appointments.reverse())
+                    appointmentsLoadedRef.current = true
+                } else {
+                    toast.error(data.message)
+                }
+
+            } catch (error) {
+                console.log(error)
+                toast.error(error.message)
+            } finally {
+                appointmentsRequestRef.current = null
             }
+        })()
 
-        } catch (error) {
-            console.log(error)
-            toast.error(error.message)
-        }
+        return appointmentsRequestRef.current
     }
 
     // Getting Doctor profile data from Database using API
@@ -41,7 +56,6 @@ const DoctorContextProvider = (props) => {
         try {
 
             const { data } = await axios.get(backendUrl + '/api/doctor/profile', { headers: { dToken } })
-            console.log(data.profileData)
             setProfileData(data.profileData)
 
         } catch (error) {
@@ -59,9 +73,9 @@ const DoctorContextProvider = (props) => {
 
             if (data.success) {
                 toast.success(data.message)
-                getAppointments()
+                getAppointments(true)
                 // after creating dashboard
-                getDashData()
+                getDashData(true)
             } else {
                 toast.error(data.message)
             }
@@ -82,9 +96,9 @@ const DoctorContextProvider = (props) => {
 
             if (data.success) {
                 toast.success(data.message)
-                getAppointments()
+                getAppointments(true)
                 // Later after creating getDashData Function
-                getDashData()
+                getDashData(true)
             } else {
                 toast.error(data.message)
             }
@@ -103,8 +117,8 @@ const DoctorContextProvider = (props) => {
 
             if (data.success) {
                 toast.success(data.message)
-                getAppointments()
-                getDashData()
+                getAppointments(true)
+                getDashData(true)
             } else {
                 toast.error(data.message)
             }
@@ -125,8 +139,8 @@ const DoctorContextProvider = (props) => {
 
             if (data.success) {
                 toast.success(data.message)
-                getAppointments()
-                getDashData()
+                getAppointments(true)
+                getDashData(true)
             } else {
                 toast.error(data.message)
             }
@@ -154,7 +168,7 @@ const DoctorContextProvider = (props) => {
 
             if (data.success) {
                 toast.success(data.message)
-                getAppointments()
+                getAppointments(true)
             } else {
                 toast.error(data.message)
             }
@@ -217,7 +231,7 @@ const DoctorContextProvider = (props) => {
 
             if (data.success) {
                 toast.success(data.message)
-                await getAppointments()
+                await getAppointments(true)
             } else {
                 toast.error(data.message)
             }
@@ -251,22 +265,31 @@ const DoctorContextProvider = (props) => {
     }
 
     // Getting Doctor dashboard data using API
-    const getDashData = async () => {
-        try {
+    const getDashData = async (force = false) => {
+        if (!force && dashboardLoadedRef.current) return
+        if (!force && dashboardRequestRef.current) return dashboardRequestRef.current
 
-            const { data } = await axios.get(backendUrl + '/api/doctor/dashboard', { headers: { dToken } })
+        dashboardRequestRef.current = (async () => {
+            try {
 
-            if (data.success) {
-                setDashData(data.dashData)
-            } else {
-                toast.error(data.message)
+                const { data } = await axios.get(backendUrl + '/api/doctor/dashboard', { headers: { dToken } })
+
+                if (data.success) {
+                    setDashData(data.dashData)
+                    dashboardLoadedRef.current = true
+                } else {
+                    toast.error(data.message)
+                }
+
+            } catch (error) {
+                console.log(error)
+                toast.error(error.message)
+            } finally {
+                dashboardRequestRef.current = null
             }
+        })()
 
-        } catch (error) {
-            console.log(error)
-            toast.error(error.message)
-        }
-
+        return dashboardRequestRef.current
     }
 
     const value = {
@@ -292,7 +315,7 @@ const DoctorContextProvider = (props) => {
 
     return (
         <DoctorContext.Provider value={value}>
-            {props.children}
+            {children}
         </DoctorContext.Provider>
     )
 

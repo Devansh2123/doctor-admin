@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { DoctorContext } from './context/DoctorContext';
 import { AdminContext } from './context/AdminContext';
 import { Route, Routes } from 'react-router-dom'
@@ -14,6 +14,7 @@ import UsersList from './pages/Admin/UsersList';
 import Claims from './pages/Admin/Claims';
 import SiteSettings from './pages/Admin/SiteSettings';
 import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
 import DoctorAppointments from './pages/Doctor/DoctorAppointments';
 import DoctorDashboard from './pages/Doctor/DoctorDashboard';
 import DoctorProfile from './pages/Doctor/DoctorProfile';
@@ -70,7 +71,10 @@ const App = () => {
       <ToastContainer />
       <div className='panel-app-bg min-h-screen w-full theme-admin'>
         <div className='w-full'>
-          <Login />
+          <Routes>
+            <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path='*' element={<Login />} />
+          </Routes>
         </div>
       </div>
     </>

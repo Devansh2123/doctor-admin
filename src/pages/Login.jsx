@@ -1,9 +1,10 @@
 import axios from 'axios'
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { DoctorContext } from '../context/DoctorContext'
 import { AdminContext } from '../context/AdminContext'
 import { toast } from 'react-toastify'
 import safeStorage from '../utils/safeStorage'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
 
@@ -13,6 +14,7 @@ const Login = () => {
   const [password, setPassword] = useState('')
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL
+  const navigate = useNavigate()
 
   const { setDToken } = useContext(DoctorContext)
   const { setAToken } = useContext(AdminContext)
@@ -114,6 +116,13 @@ const Login = () => {
         {/* Login Button */}
         <button className='panel-btn w-full py-2.5 rounded-lg text-base font-medium'>
           Login as {state}
+        </button>
+        <button
+          type='button'
+          onClick={() => navigate('/forgot-password')}
+          className='w-full text-center text-sm text-blue-700 underline'
+        >
+          Forgot Password?
         </button>
       </div>
     </form>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useContext } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
@@ -27,20 +27,7 @@ const AllAppointments = () => {
     if (!aToken) return
 
     getAllAppointments()
-    const intervalId = setInterval(() => {
-      getAllAppointments()
-    }, 10000)
-
-    const handleWindowFocus = () => {
-      getAllAppointments()
-    }
-
-    window.addEventListener('focus', handleWindowFocus)
-
-    return () => {
-      clearInterval(intervalId)
-      window.removeEventListener('focus', handleWindowFocus)
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [aToken])
 
   return (

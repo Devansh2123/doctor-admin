@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { assets } from '../../assets/assets'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
@@ -24,21 +24,7 @@ const Dashboard = () => {
     if (!aToken) return
 
     getDashData()
-
-    const intervalId = setInterval(() => {
-      getDashData()
-    }, 10000)
-
-    const handleWindowFocus = () => {
-      getDashData()
-    }
-
-    window.addEventListener('focus', handleWindowFocus)
-
-    return () => {
-      clearInterval(intervalId)
-      window.removeEventListener('focus', handleWindowFocus)
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [aToken])
 
   const {

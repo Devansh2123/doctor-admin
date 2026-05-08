@@ -1,12 +1,12 @@
+/* eslint-disable react/prop-types */
 import axios from "axios";
-import { createContext, useState } from "react";
+import { createContext, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import safeStorage from "../utils/safeStorage";
 
-
 export const AdminContext = createContext()
 
-const AdminContextProvider = (props) => {
+const AdminContextProvider = ({ children }) => {
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL
 
@@ -17,6 +17,10 @@ const AdminContextProvider = (props) => {
     const [users, setUsers] = useState([])
     const [dashData, setDashData] = useState(false)
     const [uploadingPrescriptionFor, setUploadingPrescriptionFor] = useState('')
+    const appointmentsRequestRef = useRef(null)
+    const dashboardRequestRef = useRef(null)
+    const appointmentsLoadedRef = useRef(false)
+    const dashboardLoadedRef = useRef(false)
 
     // Getting all Doctors data from Database using API
     const getAllDoctors = async () => {
@@ -60,7 +64,7 @@ const AdminContextProvider = (props) => {
             if (data.success) {
                 toast.success(data.message)
                 getAllDoctors()
-                getDashData()
+                getDashData(true)
             } else {
                 toast.error(data.message)
             }
@@ -75,7 +79,7 @@ const AdminContextProvider = (props) => {
             if (data.success) {
                 toast.success(data.message)
                 getAllDoctors()
-                getDashData()
+                getDashData(true)
             } else {
                 toast.error(data.message)
             }
@@ -103,7 +107,7 @@ const AdminContextProvider = (props) => {
             if (data.success) {
                 toast.success(data.message)
                 getAllUsers()
-                getDashData()
+                getDashData(true)
             } else {
                 toast.error(data.message)
             }
@@ -114,22 +118,30 @@ const AdminContextProvider = (props) => {
 
 
     // Getting all appointment data from Database using API
-    const getAllAppointments = async () => {
+    const getAllAppointments = async (force = false) => {
+        if (!force && appointmentsLoadedRef.current) return
+        if (!force && appointmentsRequestRef.current) return appointmentsRequestRef.current
 
-        try {
+        appointmentsRequestRef.current = (async () => {
+            try {
 
-            const { data } = await axios.get(backendUrl + '/api/admin/appointments', { headers: { aToken } })
-            if (data.success) {
-                setAppointments(data.appointments.reverse())
-            } else {
-                toast.error(data.message)
+                const { data } = await axios.get(backendUrl + '/api/admin/appointments', { headers: { aToken } })
+                if (data.success) {
+                    setAppointments(data.appointments.reverse())
+                    appointmentsLoadedRef.current = true
+                } else {
+                    toast.error(data.message)
+                }
+
+            } catch (error) {
+                toast.error(error.message)
+                console.log(error)
+            } finally {
+                appointmentsRequestRef.current = null
             }
+        })()
 
-        } catch (error) {
-            toast.error(error.message)
-            console.log(error)
-        }
-
+        return appointmentsRequestRef.current
     }
 
     // Function to cancel appointment using API
@@ -141,7 +153,7 @@ const AdminContextProvider = (props) => {
 
             if (data.success) {
                 toast.success(data.message)
-                getAllAppointments()
+                getAllAppointments(true)
             } else {
                 toast.error(data.message)
             }
@@ -171,7 +183,7 @@ const AdminContextProvider = (props) => {
 
             if (data.success) {
                 toast.success(data.message)
-                getAllAppointments()
+                getAllAppointments(true)
             } else {
                 toast.error(data.message)
             }
@@ -223,22 +235,31 @@ const AdminContextProvider = (props) => {
     }
 
     // Getting Admin Dashboard data from Database using API
-    const getDashData = async () => {
-        try {
+    const getDashData = async (force = false) => {
+        if (!force && dashboardLoadedRef.current) return
+        if (!force && dashboardRequestRef.current) return dashboardRequestRef.current
 
-            const { data } = await axios.get(backendUrl + '/api/admin/dashboard', { headers: { aToken } })
+        dashboardRequestRef.current = (async () => {
+            try {
 
-            if (data.success) {
-                setDashData(data.dashData)
-            } else {
-                toast.error(data.message)
+                const { data } = await axios.get(backendUrl + '/api/admin/dashboard', { headers: { aToken } })
+
+                if (data.success) {
+                    setDashData(data.dashData)
+                    dashboardLoadedRef.current = true
+                } else {
+                    toast.error(data.message)
+                }
+
+            } catch (error) {
+                console.log(error)
+                toast.error(error.message)
+            } finally {
+                dashboardRequestRef.current = null
             }
+        })()
 
-        } catch (error) {
-            console.log(error)
-            toast.error(error.message)
-        }
-
+        return dashboardRequestRef.current
     }
 
     const value = {
@@ -264,7 +285,7 @@ const AdminContextProvider = (props) => {
 
     return (
         <AdminContext.Provider value={value}>
-            {props.children}
+            {children}
         </AdminContext.Provider>
     )
 
