@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react'
 import { DoctorContext } from './context/DoctorContext';
 import { AdminContext } from './context/AdminContext';
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar'
@@ -44,36 +44,62 @@ const App = () => {
     }
   }, [aToken, backendUrl])
 
-  return dToken || aToken ? (
-    <div className={`panel-app-bg min-h-screen w-full ${roleTheme}`}>
-      <ToastContainer />
-      <Navbar />
-      <div className='flex items-start'>
-        <Sidebar />
-        <Routes>
-          <Route path='/' element={<></>} />
-          <Route path='/admin-dashboard' element={<Dashboard />} />
-          <Route path='/all-appointments' element={<AllAppointments />} />
-          <Route path='/add-doctor' element={<AddDoctor />} />
-          <Route path='/doctor-list' element={<DoctorsList />} />
-          <Route path='/users-list' element={<UsersList />} />
-          <Route path='/claims' element={<Claims />} />
-          <Route path='/site-settings' element={<SiteSettings />} />
-          <Route path='/doctor-dashboard' element={<DoctorDashboard />} />
-          <Route path='/doctor-appointments' element={<DoctorAppointments />} />
-          <Route path='/doctor-profile' element={<DoctorProfile />} />
-          <Route path='/doctor-consultation/:appointmentId' element={<DoctorConsultation />} />
-        </Routes>
+  if (aToken) {
+    return (
+      <div className={`panel-app-bg min-h-screen w-full ${roleTheme}`}>
+        <ToastContainer />
+        <Navbar />
+        <div className='flex items-start'>
+          <Sidebar />
+          <Routes>
+            <Route path='/' element={<Navigate to='/admin-dashboard' replace />} />
+            <Route path='/admin-dashboard' element={<Dashboard />} />
+            <Route path='/all-appointments' element={<AllAppointments />} />
+            <Route path='/add-doctor' element={<AddDoctor />} />
+            <Route path='/doctor-list' element={<DoctorsList />} />
+            <Route path='/users-list' element={<UsersList />} />
+            <Route path='/claims' element={<Claims />} />
+            <Route path='/site-settings' element={<SiteSettings />} />
+            <Route path='/doctor-dashboard' element={<DoctorDashboard />} />
+            <Route path='/doctor-appointments' element={<DoctorAppointments />} />
+            <Route path='/doctor-profile' element={<DoctorProfile />} />
+            <Route path='/doctor-consultation/:appointmentId' element={<DoctorConsultation />} />
+            <Route path='*' element={<Navigate to='/admin-dashboard' replace />} />
+          </Routes>
+        </div>
       </div>
-    </div>
-  ) : (
+    )
+  }
+
+  if (dToken) {
+    return (
+      <div className={`panel-app-bg min-h-screen w-full ${roleTheme}`}>
+        <ToastContainer />
+        <Navbar />
+        <div className='flex items-start'>
+          <Sidebar />
+          <Routes>
+            <Route path='/' element={<Navigate to='/doctor-dashboard' replace />} />
+            <Route path='/doctor-dashboard' element={<DoctorDashboard />} />
+            <Route path='/doctor-appointments' element={<DoctorAppointments />} />
+            <Route path='/doctor-profile' element={<DoctorProfile />} />
+            <Route path='/doctor-consultation/:appointmentId' element={<DoctorConsultation />} />
+            <Route path='*' element={<Navigate to='/doctor-dashboard' replace />} />
+          </Routes>
+        </div>
+      </div>
+    )
+  }
+
+  return (
     <>
       <ToastContainer />
       <div className='panel-app-bg min-h-screen w-full theme-admin'>
         <div className='w-full'>
           <Routes>
             <Route path='/forgot-password' element={<ForgotPassword />} />
-            <Route path='*' element={<Login />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='*' element={<Navigate to='/login' replace />} />
           </Routes>
         </div>
       </div>
