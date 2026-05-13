@@ -16,6 +16,7 @@ const DoctorAppointments = () => {
   const getApprovalStatus = (appointment) => appointment?.approvalStatus || 'approved'
   const isPendingApproval = (appointment) => getApprovalStatus(appointment) === 'pending'
   const isRejected = (appointment) => getApprovalStatus(appointment) === 'rejected'
+  const patientImage = (patient) => patient?.image || assets.upload_area
 
   const isPastAppointment = (appointment) => {
     // Only show in 'past' tab if explicitly cancelled or completed by doctor
@@ -76,7 +77,14 @@ const DoctorAppointments = () => {
           <div className='panel-table-row flex flex-wrap justify-between max-sm:gap-5 max-sm:text-base sm:grid grid-cols-[0.5fr_2fr_1fr_1fr_3fr_1fr_2.5fr] gap-1 items-center text-slate-600' key={item._id}>
             <p className='max-sm:hidden'>{index + 1}</p>
             <div className='flex items-center gap-2'>
-              <img src={item.userData.image} className='w-8 rounded-full' alt="" /> <p>{item.userData.name}</p>
+              <img src={patientImage(item.userData)} className='w-8 rounded-full' alt="" />
+              <div className='flex flex-col'>
+                <p>{item.userData.name}</p>
+                <div className='flex flex-wrap gap-2 text-[10px] text-slate-500'>
+                  {item.userData.patientCode && <span>Patient: {item.userData.patientCode}</span>}
+                  {item.appointmentCode && <span>Appt: {item.appointmentCode}</span>}
+                </div>
+              </div>
             </div>
             <div>
               <p className='panel-note-chip'>

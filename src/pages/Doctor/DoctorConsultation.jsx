@@ -305,12 +305,13 @@ const DoctorConsultation = () => {
             <p className='panel-section-headline mb-3'>Patient Details (Auto-filled from Appointment)</p>
             <div className='grid sm:grid-cols-4 gap-2 text-sm'>
               <p><span className='font-semibold'>Name:</span> {patient.name || '-'}</p>
+              <p><span className='font-semibold'>Code:</span> {patient.patientCode || '-'}</p>
               <p><span className='font-semibold'>Age:</span> {patient.age || calculateAge(patient.dob)}</p>
               <p><span className='font-semibold'>Gender:</span> {patient.gender || '-'}</p>
               <p><span className='font-semibold'>Phone:</span> {patient.phone || '-'}</p>
               <p><span className='font-semibold'>Date:</span> {slotDateFormat(appointment.slotDate)}</p>
-              <p><span className='font-semibold'>Time:</span> {appointment.slotTime}</p>
               <p className='sm:col-span-2'><span className='font-semibold'>Appointment ID:</span> {appointment.id}</p>
+              <p className='sm:col-span-2'><span className='font-semibold'>Appointment Code:</span> {appointment?.appointmentCode || '-'}</p>
             </div>
           </div>
 
@@ -436,9 +437,9 @@ const DoctorConsultation = () => {
                 <thead>
                   <tr className='bg-slate-50 text-slate-700'>
                     <th className='border border-slate-200 p-2 text-left'>Medicine</th>
-                    <th className='border border-slate-200 p-2 text-left'>Dosage</th>
-                    <th className='border border-slate-200 p-2 text-left'>Timing / Duration</th>
-                    <th className='border border-slate-200 p-2 text-left'>Qty</th>
+                    <th className='border border-slate-200 p-2 text-left'>Dose</th>
+                    <th className='border border-slate-200 p-2 text-left'>Frequency</th>
+                    <th className='border border-slate-200 p-2 text-left'>Duration</th>
                     <th className='border border-slate-200 p-2 text-left'>Composition</th>
                     <th className='border border-slate-200 p-2 text-left'>Notes</th>
                     <th className='border border-slate-200 p-2 text-left'>Action</th>
@@ -450,9 +451,21 @@ const DoctorConsultation = () => {
                       <td className='border border-slate-200 p-1'><input className='panel-input py-1 text-xs' value={medicine.name} onChange={(e) => updateMedicine(index, 'name', e.target.value)} /></td>
                       <td className='border border-slate-200 p-1'><input className='panel-input py-1 text-xs' value={medicine.dosage} onChange={(e) => updateMedicine(index, 'dosage', e.target.value)} /></td>
                       <td className='border border-slate-200 p-1'><input className='panel-input py-1 text-xs' value={medicine.timing} onChange={(e) => updateMedicine(index, 'timing', e.target.value)} /></td>
-                      <td className='border border-slate-200 p-1'><input className='panel-input py-1 text-xs' value={medicine.qty} onChange={(e) => updateMedicine(index, 'qty', e.target.value)} /></td>
+                      <td className='border border-slate-200 p-1'><input className='panel-input py-1 text-xs' value={medicine.qty} onChange={(e) => updateMedicine(index, 'qty', e.target.value)} placeholder='3 Month(s)' /></td>
                       <td className='border border-slate-200 p-1'><input className='panel-input py-1 text-xs' value={medicine.composition} onChange={(e) => updateMedicine(index, 'composition', e.target.value)} /></td>
-                      <td className='border border-slate-200 p-1'><input className='panel-input py-1 text-xs' value={medicine.notes} onChange={(e) => updateMedicine(index, 'notes', e.target.value)} /></td>
+                      <td className='border border-slate-200 p-1'>
+                        <input
+                          className='panel-input py-1 text-xs'
+                          value={medicine.notes}
+                          onChange={(e) => updateMedicine(index, 'notes', e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Tab' && index === draft.medicines.length - 1) {
+                              e.preventDefault()
+                              addBlankMedicine()
+                            }
+                          }}
+                        />
+                      </td>
                       <td className='border border-slate-200 p-1'>
                         <button onClick={() => removeMedicine(index)} className='panel-danger-btn'>Remove</button>
                       </td>
@@ -508,28 +521,31 @@ const DoctorConsultation = () => {
             <table className='prescription-table'>
               <thead>
                 <tr>
+                  <th>S. No</th>
                   <th>Medicine</th>
-                  <th>Dosage</th>
-                  <th>Timing - Freq - Duration</th>
-                  <th>Qty</th>
+                  <th>Dose</th>
+                  <th>Frequency</th>
+                  <th>Duration</th>
+                  <th>Notes</th>
                 </tr>
               </thead>
               <tbody>
                 {draft.medicines.filter((m) => m.name).length === 0 && (
                   <tr>
-                    <td colSpan={4}>No medicines added yet.</td>
+                    <td colSpan={6}>No medicines added yet.</td>
                   </tr>
                 )}
                 {draft.medicines.filter((m) => m.name).map((medicine, index) => (
                   <tr key={`preview-${index}`}>
+                    <td>{index + 1}</td>
                     <td>
                       <p className='font-semibold'>{medicine.name}</p>
                       {medicine.composition && <p className='prescription-small'>Composition: {medicine.composition}</p>}
-                      {medicine.notes && <p className='prescription-small'>Notes: {medicine.notes}</p>}
                     </td>
                     <td>{medicine.dosage || '-'}</td>
                     <td>{medicine.timing || '-'}</td>
                     <td>{medicine.qty || '-'}</td>
+                    <td>{medicine.notes || '-'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -548,7 +564,7 @@ const DoctorConsultation = () => {
             {!aiDiagnosis && <p className='text-xs text-slate-500'>Click "AI Diagnosis" after adding symptoms.</p>}
             {aiDiagnosis && (
               <div className='space-y-2 text-xs'>
-                <p><span className='font-semibold'>Suggested:</span> {aiDiagnosis.suggestedDiagnosis || '-'}</p>
+                <p><span className='font-semibold'>Diagnosis:</span> {aiDiagnosis.suggestedDiagnosis || '-'}</p>
                 <p><span className='font-semibold'>Confidence:</span> {aiDiagnosis.confidence || '-'}</p>
                 {aiDiagnosis.differentialDiagnoses?.length > 0 && (
                   <p><span className='font-semibold'>Differentials:</span> {aiDiagnosis.differentialDiagnoses.join(', ')}</p>

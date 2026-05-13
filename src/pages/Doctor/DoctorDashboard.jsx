@@ -9,6 +9,7 @@ const DoctorDashboard = () => {
 
   const { dToken, dashData, getDashData, cancelAppointment, completeAppointment, approveAppointment, rejectAppointment } = useContext(DoctorContext)
   const { slotDateFormat, currency } = useContext(AppContext)
+  const patientImage = (patient) => patient?.image || assets.upload_area
 
   const getStatusLabel = (appointment) => {
     if ((appointment?.approvalStatus || 'approved') === 'pending') return { text: 'Pending Approval', className: 'text-amber-600' }
@@ -82,7 +83,7 @@ const DoctorDashboard = () => {
         <div className='py-2'>
           {dashData.latestAppointments.slice(0, 5).map((item, index) => (
             <div className='panel-table-row flex items-center gap-3' key={index}>
-              <img className='rounded-full w-10' src={item.userData.image} alt="" />
+              <img className='rounded-full w-10' src={patientImage(item.userData)} alt="" />
               <div className='flex-1 text-sm'>
                 <p className='text-gray-800 font-medium'>{item.userData.name}</p>
                 <p className='text-gray-600 '>Booking on {slotDateFormat(item.slotDate)}</p>
@@ -121,7 +122,7 @@ const DoctorDashboard = () => {
             const status = getStatusLabel(item)
             return (
               <div className='panel-table-row flex items-center gap-3' key={item._id}>
-                <img className='rounded-full w-10' src={item.userData.image} alt="" />
+                <img className='rounded-full w-10' src={patientImage(item.userData)} alt="" />
                 <div className='flex-1 text-sm'>
                   <p className='text-gray-800 font-medium'>{item.userData.name}</p>
                   <p className='text-gray-600 '>{slotDateFormat(item.slotDate)} at {item.slotTime}</p>
