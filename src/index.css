@@ -109,6 +109,40 @@
         background: #eef2ff;
     }
 
+    .panel-account-trigger {
+        @apply rounded-full px-2 py-1 transition;
+    }
+
+    .panel-account-trigger:hover {
+        background: rgba(255, 255, 255, 0.7);
+    }
+
+    .panel-account-chevron {
+        width: 0.55rem;
+        height: 0.55rem;
+        border-right: 2px solid #64748b;
+        border-bottom: 2px solid #64748b;
+        transform: rotate(45deg);
+        transition: transform 0.2s ease;
+    }
+
+    .panel-account-chevron.rotate-180 {
+        transform: rotate(225deg);
+    }
+
+    .panel-account-menu {
+        background: #ffffff;
+    }
+
+    .panel-account-menu-item {
+        @apply block w-full rounded-lg px-2 py-3 text-left text-base font-medium text-slate-600 transition;
+    }
+
+    .panel-account-menu-item:hover {
+        color: #0b1f4d;
+        background: #eef2ff;
+    }
+
     .panel-sidebar {
         background: linear-gradient(180deg, #ffffff 0%, var(--panel-header-start) 100%);
         border-color: var(--panel-accent-border);

@@ -1,5 +1,6 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import adminHeaderLogo from '../assets/admin_header_logo.png'
+import { assets } from '../assets/assets'
 import { DoctorContext } from '../context/DoctorContext'
 import { AdminContext } from '../context/AdminContext'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
@@ -7,7 +8,8 @@ import safeStorage from '../utils/safeStorage'
 
 const Navbar = () => {
 
-  const { dToken, setDToken } = useContext(DoctorContext)
+  const [showDropdown, setShowDropdown] = useState(false)
+  const { dToken, setDToken, profileData, getProfileData } = useContext(DoctorContext)
   const { aToken, setAToken } = useContext(AdminContext)
 
   const navigate = useNavigate()
@@ -20,15 +22,24 @@ const Navbar = () => {
         { label: 'DOCTORS', path: '/doctor-list', hasDropdown: true },
         { label: 'USERS', path: '/users-list' },
         { label: 'CLAIMS', path: '/claims' },
-        { label: 'SETTING', path: '/site-settings' },
       ]
     : [
         { label: 'DASHBOARD', path: '/doctor-dashboard' },
         { label: 'APPOINTMENTS', path: '/doctor-appointments' },
-        { label: 'PROFILE', path: '/doctor-profile' },
       ]
 
+  const accountName = aToken ? 'Admin' : (profileData?.name || 'Doctor')
+  const accountImage = !aToken && profileData?.image ? profileData.image : assets.admin_logo
+  const profilePath = aToken ? '/site-settings' : '/doctor-profile'
+
+  useEffect(() => {
+    if (dToken && !profileData) {
+      getProfileData()
+    }
+  }, [dToken, profileData, getProfileData])
+
   const logout = () => {
+    setShowDropdown(false)
     dToken && setDToken('')
     dToken && safeStorage.remove('dToken')
     aToken && setAToken('')
@@ -73,10 +84,44 @@ const Navbar = () => {
           ))}
         </ul>
 
-        <div className='flex items-center gap-3'>
-          <button onClick={() => logout()} className='panel-btn px-5 py-2 rounded-full text-sm'>
-            Logout
+        <div className='relative flex items-center gap-3'>
+          <button
+            type='button'
+            onClick={() => setShowDropdown((prev) => !prev)}
+            className='panel-account-trigger flex items-center gap-2'
+          >
+            <img className='h-9 w-9 rounded-full border border-slate-200 object-cover' src={accountImage} alt='' />
+            <div className='hidden sm:flex flex-col text-right'>
+              <span className='text-sm font-medium text-slate-900'>{accountName}</span>
+              <span className='text-xs text-slate-500'>View account</span>
+            </div>
+            <span className={`panel-account-chevron ${showDropdown ? 'rotate-180' : ''}`}></span>
           </button>
+
+          {showDropdown && (
+            <>
+              <div className='fixed inset-0 z-10' onClick={() => setShowDropdown(false)}></div>
+              <div className='panel-account-menu absolute right-0 top-full z-20 mt-3 min-w-56 rounded-xl border border-slate-200 bg-white p-4 shadow-lg'>
+                <button
+                  type='button'
+                  onClick={() => {
+                    navigate(profilePath)
+                    setShowDropdown(false)
+                  }}
+                  className='panel-account-menu-item'
+                >
+                  My Profile
+                </button>
+                <button
+                  type='button'
+                  onClick={logout}
+                  className='panel-account-menu-item'
+                >
+                  Logout
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
