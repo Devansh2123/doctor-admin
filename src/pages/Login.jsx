@@ -114,7 +114,7 @@ const Login = () => {
         </div>
 
         {/* Login Button */}
-        <button className='panel-btn w-full py-2.5 rounded-lg text-base font-medium'>
+        <button className='w-full rounded-lg bg-[#0b1f4d] py-3 text-base font-medium text-white transition hover:bg-[#12337a]'>
           Login as {state}
         </button>
         <button

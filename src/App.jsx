@@ -5,7 +5,6 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar'
-import Sidebar from './components/Sidebar'
 import Dashboard from './pages/Admin/Dashboard';
 import AllAppointments from './pages/Admin/AllAppointments';
 import AddDoctor from './pages/Admin/AddDoctor';
@@ -13,6 +12,8 @@ import DoctorsList from './pages/Admin/DoctorsList';
 import UsersList from './pages/Admin/UsersList';
 import Claims from './pages/Admin/Claims';
 import SiteSettings from './pages/Admin/SiteSettings';
+import AdminLogin from './pages/AdminLogin'
+import DoctorLogin from './pages/DoctorLogin'
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import DoctorAppointments from './pages/Doctor/DoctorAppointments';
@@ -49,8 +50,7 @@ const App = () => {
       <div className={`panel-app-bg min-h-screen w-full ${roleTheme}`}>
         <ToastContainer />
         <Navbar />
-        <div className='flex items-start'>
-          <Sidebar />
+        <div className='w-full'>
           <Routes>
             <Route path='/' element={<Navigate to='/admin-dashboard' replace />} />
             <Route path='/admin-dashboard' element={<Dashboard />} />
@@ -76,8 +76,7 @@ const App = () => {
       <div className={`panel-app-bg min-h-screen w-full ${roleTheme}`}>
         <ToastContainer />
         <Navbar />
-        <div className='flex items-start'>
-          <Sidebar />
+        <div className='w-full'>
           <Routes>
             <Route path='/' element={<Navigate to='/doctor-dashboard' replace />} />
             <Route path='/doctor-dashboard' element={<DoctorDashboard />} />
@@ -99,6 +98,8 @@ const App = () => {
           <Routes>
             <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route path='/login' element={<Login />} />
+            <Route path='/admin-login' element={<AdminLogin />} />
+            <Route path='/doctor-login' element={<DoctorLogin />} />
             <Route path='*' element={<Navigate to='/login' replace />} />
           </Routes>
         </div>

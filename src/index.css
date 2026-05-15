@@ -62,8 +62,51 @@
     }
 
     .panel-topbar {
-        background: linear-gradient(90deg, var(--panel-header-start) 0%, var(--panel-header-end) 100%);
-        border-color: var(--panel-accent-border);
+        background: linear-gradient(95deg, #ffffff 0%, #eef2ff 50%, #eff6ff 100%);
+        border-color: #a5b4fc;
+        box-shadow: 0 16px 30px -24px rgba(11, 31, 77, 0.35);
+    }
+
+    .panel-nav-shell {
+        width: min(1240px, 100%);
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .panel-nav-link {
+        @apply px-3 py-2 rounded-full text-slate-600 transition;
+    }
+
+    .panel-nav-link:hover {
+        color: #0b1f4d;
+        background: #ffffff;
+    }
+
+    .panel-nav-active {
+        color: #0b1f4d;
+        background: #ffffff;
+        box-shadow: 0 8px 20px -16px rgba(30, 58, 138, 0.7);
+    }
+
+    .panel-nav-menu:hover .panel-nav-dropdown,
+    .panel-nav-menu:focus-within .panel-nav-dropdown {
+        display: flex;
+    }
+
+    .panel-nav-dropdown {
+        z-index: 30;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .panel-nav-dropdown-item {
+        @apply rounded-lg px-3 py-2 text-sm text-slate-600 transition;
+    }
+
+    .panel-nav-dropdown-item:hover,
+    .panel-nav-dropdown-item.active {
+        color: #0b1f4d;
+        background: #eef2ff;
     }
 
     .panel-sidebar {
@@ -81,22 +124,25 @@
 
     .panel-chip {
         @apply inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-medium;
-        border-color: var(--panel-accent-border);
-        background: var(--panel-accent-soft);
-        color: var(--panel-accent-text);
+        border-color: #c7d2fe;
+        background: #ffffff;
+        color: #0b1f4d;
     }
 
     .panel-input {
-        @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-indigo-400;
+        @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-[#0b1f4d] focus:ring-2 focus:ring-blue-100;
     }
 
     .panel-btn {
-        @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-white transition;
-        background: var(--panel-accent);
+        @apply inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-medium transition;
+        border-color: #0b1f4d;
+        background: #ffffff;
+        color: #0b1f4d;
     }
 
     .panel-btn:hover {
-        background: var(--panel-accent-hover);
+        background: #0b1f4d;
+        color: #ffffff;
     }
 
     .panel-active-item {
