@@ -3,12 +3,11 @@ import axios from "axios";
 import { createContext, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import safeStorage from "../utils/safeStorage";
+import backendUrl from "../config/backend";
 
 export const AdminContext = createContext()
 
 const AdminContextProvider = ({ children }) => {
-
-    const backendUrl = import.meta.env.VITE_BACKEND_URL
 
     const [aToken, setAToken] = useState(() => safeStorage.get('aToken') || '')
 

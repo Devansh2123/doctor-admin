@@ -3,13 +3,12 @@ import { createContext, useRef, useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import safeStorage from "../utils/safeStorage";
+import backendUrl from "../config/backend";
 
 
 export const DoctorContext = createContext()
 
 const DoctorContextProvider = ({ children }) => {
-
-    const backendUrl = import.meta.env.VITE_BACKEND_URL
 
     const [dToken, setDToken] = useState(() => safeStorage.get('dToken') || '')
     const [appointments, setAppointments] = useState([])

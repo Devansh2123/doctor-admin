@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import backendUrl from "../config/backend";
 
 
 export const AppContext = createContext()
@@ -8,8 +9,6 @@ const AppContextProvider = (props) => {
     const rawCurrency = import.meta.env.VITE_CURRENCY
     const normalizedCurrency = rawCurrency === '\\u20B9' ? '\u20B9' : rawCurrency
     const currency = normalizedCurrency === 'INR' ? '\u20B9' : normalizedCurrency
-    const backendUrl = import.meta.env.VITE_BACKEND_URL
-
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
     // Function to format the date eg. ( 20_01_2000 => 20 Jan 2000 )

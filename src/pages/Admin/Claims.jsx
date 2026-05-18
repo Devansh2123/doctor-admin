@@ -2,6 +2,7 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { AdminContext } from '../../context/AdminContext'
+import backendUrl from '../../config/backend'
 
 const statusOptions = ['claimed', 'pending', 'approved', 'rejected']
 
@@ -21,7 +22,6 @@ const statusClass = (status) => {
 
 const Claims = () => {
   const { aToken } = useContext(AdminContext)
-  const backendUrl = import.meta.env.VITE_BACKEND_URL
   const [claims, setClaims] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState('all')

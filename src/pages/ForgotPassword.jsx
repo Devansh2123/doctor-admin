@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import backendUrl from '../config/backend'
 
 const ForgotPassword = () => {
   const [state, setState] = useState('Admin')
@@ -10,7 +11,6 @@ const ForgotPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL
   const navigate = useNavigate()
 
   const onSubmitHandler = async (event) => {

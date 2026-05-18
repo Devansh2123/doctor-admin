@@ -21,14 +21,13 @@ import DoctorDashboard from './pages/Doctor/DoctorDashboard';
 import DoctorProfile from './pages/Doctor/DoctorProfile';
 import DoctorConsultation from './pages/Doctor/DoctorConsultation';
 import { io } from 'socket.io-client';
+import backendUrl from './config/backend';
 
 const App = () => {
 
   const { dToken } = useContext(DoctorContext)
   const { aToken } = useContext(AdminContext)
   const roleTheme = aToken ? 'theme-admin' : 'theme-doctor'
-  const backendUrl = import.meta.env.VITE_BACKEND_URL
-
   useEffect(() => {
     if (!aToken || !backendUrl) return
 

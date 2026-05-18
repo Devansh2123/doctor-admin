@@ -5,6 +5,7 @@ import { AdminContext } from '../context/AdminContext'
 import { toast } from 'react-toastify'
 import safeStorage from '../utils/safeStorage'
 import { useNavigate } from 'react-router-dom'
+import backendUrl from '../config/backend'
 
 const Login = () => {
 
@@ -13,7 +14,6 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL
   const navigate = useNavigate()
 
   const { setDToken } = useContext(DoctorContext)

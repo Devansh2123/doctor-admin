@@ -2,11 +2,10 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { AdminContext } from '../../context/AdminContext'
+import backendUrl from '../../config/backend'
 
 const SiteSettings = () => {
   const { aToken } = useContext(AdminContext)
-  const backendUrl = import.meta.env.VITE_BACKEND_URL
-
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
@@ -259,4 +258,3 @@ const SiteSettings = () => {
 }
 
 export default SiteSettings
-
